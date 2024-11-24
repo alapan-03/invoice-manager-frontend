@@ -19,3 +19,11 @@
 .save-btn:hover{
     background-color: #3f9cff;
 }
+
+.tab-warn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    color: gray;
+}

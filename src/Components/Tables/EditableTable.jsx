@@ -114,6 +114,9 @@ const EditableTable = ({ data, onUpdate }) => {
     <div className="table-container">
       {toastMessage && <Toast message={toastMessage} onClose={closeToast} />}
 
+      <div className="tab-warn">
+        <p>You can edit items from "Customers" tab.</p>
+      </div>
       <table className="editable-table">
         <thead>
           <tr>
