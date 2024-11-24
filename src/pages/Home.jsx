@@ -97,21 +97,21 @@ const Home = () => {
     );
   };
 
-  const updateInvoices = (index, updatedInvoice) => {
-    const updatedInvoices = [...invoicesSt];
-    updatedInvoices[index] = updatedInvoice;
+  // const updateInvoices = (index, updatedInvoice) => {
+  //   const updatedInvoices = [...invoicesSt];
+  //   updatedInvoices[index] = updatedInvoice;
 
-    const updatedProducts = productsSt?.map((product) => {
-      const matchingProduct = updatedInvoice?.productDetails?.find(
-        (p) => p?.ProductName === (product?.Name || product?.ProductName)
-      );
-      return matchingProduct ? { ...product, ...matchingProduct } : product;
-    });
+  //   const updatedProducts = productsSt?.map((product) => {
+  //     const matchingProduct = updatedInvoice?.productDetails?.find(
+  //       (p) => p?.ProductName === (product?.Name || product?.ProductName)
+  //     );
+  //     return matchingProduct ? { ...product, ...matchingProduct } : product;
+  //   });
 
-    updateAllData({ updatedInvoices, updatedProducts });
+  //   updateAllData({ updatedInvoices, updatedProducts });
 
     
-  };
+  // };
 
 
   const updateCustomers = (index, updatedCustomer) => {
@@ -140,6 +140,43 @@ const Home = () => {
     );
   };
   console.log("Customer reducer:", customers);
+
+
+  const updateInvoices = (index, updatedInvoice) => {
+    // Update standalone invoices list
+    console.log("Updated Invoice: ", updatedInvoice);
+    const updatedInvoices = invoices?.length > 0 ? [...invoices] : [...invoicesSt];
+    updatedInvoices[index] = updatedInvoice;
+  
+    updatedInvoices[index] = {
+      ...updatedInvoices[index],
+      ...updatedInvoice,
+      products: updatedInvoices[index].Products, // Preserve nested products
+    };
+
+    const updatedCustomers = customersSt?.map((customer) =>
+      customer.SerialNumber === updatedInvoice.serials
+        ? { ...customer, ...updatedInvoice } // Update matching customer based on SerialNumber
+        : customer
+    );
+  
+    // Update local states
+    setInvoicesSt(updatedInvoices);
+    setCustomersSt(updatedCustomers);
+  
+    console.log("Invoice: ",invoicesSt)
+    
+    // Dispatch updated data
+    dispatch(
+      setInvoices({
+        invoices: updatedInvoices,
+        products,
+        customers: updatedCustomers,
+      })
+    );
+  };
+  console.log("Invoices reducer:", invoices);
+  
   
   
   const handleUpload = (data) => {
@@ -227,12 +264,13 @@ const Home = () => {
 
   const processedInvoices = invoicesSt?.map((invoice) => {
     // Process products
+    console.log("Invoices: ", invoice)
     const products =
     invoice?.productDetails? invoice.productDetails : 
-    invoice?.ProductName? invoice.ProductName: invoice?.ProductDetails?.map((product, index) => ({
+    invoice?.ProductName? invoice.ProductName: invoice?.ProductDetails? invoice?.Products:invoice?.products?.map((product, index) => ({
       SerialNumber: invoice["SerialNumber"],
       // UUID: uuidv4(),
-        ProductName: product["ProductName"] || product["Name"] || product["productName"] || "Unknown",
+        ProductName: product["ProductName"] || product["Name"] || product["productName"],
         Qty: product["Qty"] || product["qty"] || product["Quantity"] || 0,
         Tax: product["Tax"] !== undefined ? product["Tax"] : product["tax"] || 0,
         TotalAmount: product["TotalAmount"] || product["totalAmount"] || 0,
@@ -241,8 +279,8 @@ const Home = () => {
       return {
         // UUID: uuidv4(),
         SerialNumber: invoice["SerialNumber"],
-        CustomerName: invoice["CustomerName"] || invoice["customerName"] || "Unknown",
-        PhoneNumber: invoice["PhoneNumber"] || "N/A",
+        CustomerName: invoice["CustomerName"] || invoice["customerName"],
+        PhoneNumber: invoice["PhoneNumber"],
         InvoiceDate: invoice["InvoiceDate"] || "Unknown",
         Subtotal: invoice["Subtotal"] || 0,
         Tax: invoice["Tax"] || 0,
@@ -292,8 +330,10 @@ const Home = () => {
           // }
           onUpdate={(index, updatedRow) => {
             updateInvoices(index, updatedRow);
+            // updateCustomers(index, updatedRow);
             // handleUpdate("invoices", index, updatedRow);
           }}
+          tab="Invoices"
         />
       ),
     },
@@ -306,6 +346,8 @@ const Home = () => {
             updateProducts(index, updatedRow);
             // handleUpdate("products", index, updatedRow);
           }}
+          tab="Products"
+
         />
       ),
     },
@@ -327,6 +369,8 @@ const Home = () => {
             updateCustomers(index, updatedRow);
             // handleUpdate("customers", index, updatedRow);
           }}
+          tab="Customers"
+
         />
       ),
     },

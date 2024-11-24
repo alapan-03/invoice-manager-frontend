@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Toast from "../Toast";
 import { Check, Pencil } from "lucide-react";
 
-const EditableTable = ({ data, onUpdate }) => {
+const EditableTable = ({ data, onUpdate, tab }) => {
   const [editingRow, setEditingRow] = useState(null);
   const [editedRow, setEditedRow] = useState({});
   const [nestedEdit, setNestedEdit] = useState(null); // Track nested row being edited
@@ -115,7 +115,7 @@ const EditableTable = ({ data, onUpdate }) => {
       {toastMessage && <Toast message={toastMessage} onClose={closeToast} />}
 
       <div className="tab-warn">
-        <p>You can edit items from "Customers" tab.</p>
+        <p>You can edit items from "Products" and "Customers" tab.</p>
       </div>
       <table className="editable-table">
         <thead>
@@ -144,13 +144,27 @@ const EditableTable = ({ data, onUpdate }) => {
                   )}
                 </td>
               ))}
-              <td>
+              {/* <td>
                 {editingRow === index ? (
                   <button onClick={() => handleSave(index)}><Check /></button>
                 ) : (
                   <button onClick={() => handleEdit(index)}><Pencil /></button>
                 )}
-              </td>
+              </td> */}
+
+{/* {tab !== "Invoices" && ( */}
+                  <td>
+                    {editingRow === index ? (
+                      <button onClick={() => handleSave(index)}>
+                        <Check />
+                      </button>
+                    ) : (
+                      <button onClick={() => handleEdit(index)}>
+                        <Pencil />
+                      </button>
+                    )}
+                  </td>
+                {/* )} */}
             </tr>
           )):
         (
