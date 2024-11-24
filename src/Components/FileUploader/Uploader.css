@@ -1,0 +1,63 @@
+/* General container styling */
+.file-uploader {
+    border: 2px dashed #007bff58;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #f8f9fa;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  /* Hover effect */
+  .file-uploader:hover {
+    background-color: #e9ecef;
+    border-color: #0056b3;
+  }
+  
+  /* Text inside the uploader */
+  .file-uploader p {
+    font-family: "Arial", sans-serif;
+    font-size: 16px;
+    color: #495057;
+    margin: 0;
+    user-select: none;
+  }
+  
+  /* Add focus effect */
+  .file-uploader:focus-within {
+    outline: none;
+    background-color: #dee2e6;
+    border-color: #303030;
+  }
+  
+  /* Input styling to hide the file input */
+  .file-uploader input {
+    display: none;
+  }
+  
+
+
+  .file-uploader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .loader-container {
+    text-align: center;
+    /* position: fixed; */
+  }
+  
+  .loader-container p {
+    margin-top: 10px;
+    font-family: "Arial", sans-serif;
+    font-size: 16px;
+    color: #495057;
+  }
+  
+
+

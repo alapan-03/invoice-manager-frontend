@@ -1,0 +1,243 @@
+.invoice-list {
+    padding: 20px;
+  }
+  
+  .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+  }
+  
+  .card {
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 0.7rem;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-header {
+    /* background-color: #007bff; */
+    
+    color: rgb(26, 26, 26);
+    font-size: 16px;
+    font-weight: bold;
+    /* text-align: center; */
+    padding: 10px 10px 15px 17px;
+  }
+  .card-body{
+    width: 90%;
+  }
+  
+  .card-body p{
+    padding: 0px 10px 5px 15px;
+    /* background-color: #f9f9f9; */
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .card-body p {
+    margin: 8px 0;
+    font-size: 15px;
+    color: #262626;
+    font-weight: 500;
+  }
+  
+  .card-body p strong {
+    color: #868686;
+  }
+  
+
+
+  /* --------------------------------------fetchInvoice-------------------------------- */
+
+
+  .invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .invoice-table thead {
+    background-color: #007bff;
+    color: white;
+    text-align: left;
+  }
+  
+  .invoice-table th,
+  .invoice-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+  }
+  
+  .invoice-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .invoice-table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .invoice-table th {
+    font-weight: bold;
+  }
+  
+  .invoice-table td {
+    color: #555;
+    word-wrap: break-word;
+  }
+
+  .upload-btn-cont{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .add-cont{
+    background-color: rgb(205, 205, 255);
+    border-radius: 50%;
+    padding: 0.1rem 0.2rem;
+  }
+  
+
+   .table-cont{
+    display: flex;
+   }
+
+
+
+
+
+   /* -------------------------------editable-table------------------------------- */
+
+
+   /* General table container styling */
+.table-container {
+    margin: 20px auto;
+    padding: 10px;
+    max-width: 90%;
+    overflow-x: auto;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .nothing-cont{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .nothing1{
+    font-size: 24px;
+    color: rgb(106, 106, 106);
+    margin-bottom: 1.3rem;
+    margin-top: 1.5rem;
+  }
+
+  .nothing2{
+    margin-top: 0;
+    color: gray;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Table styling */
+  .editable-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Arial", sans-serif;
+    text-align: left;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .editable-table thead {
+    background: #dadada;
+    color: rgb(79, 79, 79);
+  }
+  
+  .editable-table th,
+  .editable-table td {
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+  }
+  
+  .editable-table tbody tr:nth-child(even) {
+    background: #f8f9fa; /* Stripe rows */
+  }
+  
+  .editable-table tbody tr:hover {
+    background: #e9ecef; /* Hover effect */
+  }
+  
+  /* Input field styling for editable cells */
+  .editable-input {
+    width: 90%;
+    padding: 6px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Buttons styling */
+  .action-button {
+    padding: 8px 14px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  
+  .save-button {
+    background: #28a745;
+    color: white;
+  }
+  
+  .save-button:hover {
+    background: #218838;
+  }
+  
+  .edit-button {
+    background: #007bff;
+    color: white;
+  }
+  
+  .edit-button:hover {
+    background: #0056b3;
+  }
+  
+  /* Value rendering styles */
+  .value-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .value-list li {
+    margin: 4px 0;
+  }
+  
+  /* Preformatted JSON object */
+  pre {
+    background: #f1f1f1;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
