@@ -9,6 +9,7 @@ body{
     /* top: 20px;
     right: 20px; */
 /* width: 100%; */
+top: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,6 +47,17 @@ body{
   }
 
 
-  body{
-    background-color: rgb(246, 246, 246);
-  }
+  *{
+    font-family: "Poppins", serif;
+    font-style: normal;
+
+    /* font-family: "Playfair", serif;
+    font-optical-sizing: auto; */
+
+    }
+
+
+    body{
+      background-color: rgb(246, 246, 246);
+      /* background-color: rgb(234, 225, 208); */
+    }

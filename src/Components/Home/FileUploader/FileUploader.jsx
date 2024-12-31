@@ -3,14 +3,29 @@ import { useDropzone } from "react-dropzone";
 import "./Uploader.css";
 // import { Pulse } from "ldrs";
 import { lineWobble } from "ldrs";
-import Toast from "./../Toast";
+import Toast from "./../../Toast";
 import { Plus } from "lucide-react";
+import { useNavigate } from "react-router";
+import { AuthProvider, useAuth } from './../../../AuthProvider';
+
 
 lineWobble.register();
 
 // Default values shown
 
-const FileUploader = ({ onUpload }) => {
+export const showToast = (setToastMessage, message) => {
+  setToastMessage(message); // Set the toast message
+  setTimeout(() => setToastMessage(""), 3000); // Clear the message after 3 seconds
+};
+
+
+
+const FileUploader = ({ onUpload, userId }) => {
+
+  const { user } = useAuth();
+
+  let navigate = useNavigate()
+
   const [loading, setLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState(""); // State to track toast message
 
@@ -22,7 +37,19 @@ const FileUploader = ({ onUpload }) => {
 
     const fileExtension = file?.name?.split(".")?.pop()?.toLowerCase();
     if (!supportedFormats.includes(`.${fileExtension}`)) {
-      showToast("Error: The file format is not supported?.");
+      showToast(setToastMessage, "Error: The file format is not supported?.");
+      return;
+    }
+
+    if(!user){
+
+      showToast(setToastMessage, "SignIn first!");
+
+      let timeout = setTimeout(() => {
+        navigate("/signin")
+      }, 1500);
+
+      // clearTimeout(timeout)
       return;
     }
 
@@ -30,7 +57,8 @@ const FileUploader = ({ onUpload }) => {
     formData?.append("file", acceptedFiles[0]);
 
     // Call API
-    fetch("https://invoice-manager-backend-mzys.onrender.com/upload", {
+    // fetch("https://invoice-manager-backend-mzys.onrender.com/upload", {
+    fetch("http://localhost:3000/upload", {
       method: "POST",
       body: formData,
     })
@@ -47,15 +75,15 @@ const FileUploader = ({ onUpload }) => {
       })
       .catch((error) => {
         console?.error("Upload failed:", error?.message);
-        showToast("Error while uploading file...")
+        showToast(setToastMessage, "Error while uploading file...")
         setLoading(false);
       });
   };
 
-  const showToast = (message) => {
-    setToastMessage(message); // Set the toast message
-    setTimeout(() => setToastMessage(""), 3000); // Clear the message after 3 seconds
-  };
+  // const showToast = (message) => {
+  //   setToastMessage(message); // Set the toast message
+  //   setTimeout(() => setToastMessage(""), 3000); // Clear the message after 3 seconds
+  // };
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 

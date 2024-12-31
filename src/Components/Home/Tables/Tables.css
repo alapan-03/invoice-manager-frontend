@@ -1,0 +1,188 @@
+.save-btn-cont{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4rem;
+}
+
+.save-btn{
+    padding: 0.8rem 1.8rem;
+    border-radius: 5px;
+    background-color: #68b1ff;
+    border: none;
+    font-size: 15px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.save-btn:hover{
+    background-color: #3f9cff;
+}
+
+.table-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    /* width: 100%; */
+    overflow: auto;
+}
+
+.editable-table{
+}
+
+.tab-warn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    color: gray;
+}
+
+.productName-cont{
+    display: flex;
+    align-items: center;
+    width: 18rem;
+    justify-content: space-between;
+    background-color: rgb(249, 249, 249);
+    gap: 2px;
+    margin-bottom: 1rem;
+    padding: 0.2rem 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.132);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.productName-cont p{
+    width: 14rem;
+}
+
+.nothing-cont{
+  color: gray;
+}
+
+
+
+
+
+/* Table Container */
+.table-container {
+    width: 100%;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    padding: 2rem 0;
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem; */
+    text-align: center;
+  }
+  
+  /* Table Styles */
+  .invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+  }
+  
+  .invoice-table thead {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .invoice-table th,
+  .invoice-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  
+  .invoice-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .invoice-table tbody tr:hover {
+    background-color: #f1faff;
+  }
+  
+  /* Table Header */
+  .invoice-table th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  
+  /* Action Buttons */
+  .action-button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 5px;
+  }
+  
+  .action-button.view {
+    background-color: #28a745;
+    color: #fff;
+  }
+  
+  .action-button.edit {
+    background-color: #ffc107;
+    color: #fff;
+  }
+  
+  .action-button:hover {
+    opacity: 0.8;
+  }
+  
+
+
+/* ------------------------------layout---------------------------------- */
+
+
+
+.tab-layout {
+    font-family: Arial, sans-serif;
+    width: 100%;
+  }
+  
+  .tab-headers {
+    display: flex;
+    /* border-bottom: 2px solid #ddd; */
+    cursor: pointer;
+    margin-bottom: 2rem;
+  }
+  
+  .tab-header {
+    padding: 10px 20px;
+    margin: 0;
+    border: none;
+    background: #ededed;
+    color: #555;
+    text-align: center;
+    transition: background 0.3s, color 0.3s;
+  }
+  
+  .tab-header:hover {
+    background: #eee;
+  }
+  
+  .tab-header.active {
+    /* background: #fff; */
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+  }
+  
+  .tab-content {
+    padding: 20px;
+    /* border: 1px solid #ddd; */
+    border-top: none;
+  }
+  

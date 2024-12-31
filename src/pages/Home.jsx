@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
-
+import { v4 as uuidv4 } from "uuid";
+import { collection, writeBatch, doc } from "firebase/firestore";
+import { db } from "./../firebaseConfig.js";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setInvoices,
@@ -9,18 +10,31 @@ import {
   updateCustomer,
   updateCommonField,
 } from "../features/invoices/invoicesSlice.jsx";
-import FileUploader from "./../Components/FileUploader/FileUploader.jsx";
-import EditableTable from "../Components/Tables/EditableTable.jsx";
-import TabLayout from "../Components/Tables/TabLayout.jsx";
+import FileUploader from "./../Components/Home/FileUploader/FileUploader.jsx";
+import EditableTable from "./../Components/Home/Tables/EditableTable.jsx";
+import TabLayout from "./../Components/Home/Tables/TabLayout.jsx";
 // import { collection, setDoc, doc } from "firebase/firestore";
-import { collection, writeBatch, doc, setDoc } from "firebase/firestore";
-import "./../Components/Tables/Tables.css"
+// import { collection, writeBatch, doc, setDoc } from "firebase/firestore";
+import "./../Components/Home/Tables/Table2.css";
+import Popup from "../Components/Home/ProductPopup/Popup.js";
 
-const Home = () => {
+import { AuthProvider, useAuth } from "./../AuthProvider.jsx";
+import Navbar from "../Components/Navbar/Navbar.jsx";
+import useSaveToFirestore from "../app/Hooks/useSaveToFirestore.jsx";
+import useCleanResponse from "../app/Hooks/useCleanResponse.jsx";
+import DetailsPopup from "../Components/Home/Tables/DetailsPopup/DetailsPopup.jsx";
+
+const Home = (props) => {
+  const { user } = useAuth();
+
+  console.log("UserHome: ", user?.email);
+
+  const uid = uuidv4();
   const dispatch = useDispatch();
   const { invoices, products, customers } = useSelector(
     (state) => state.invoices
   );
+  console.log("Id:", props.userId);
 
   // const [commonData, setCommonData] = useState({});
   const [activeTab, setActiveTab] = useState(0);
@@ -29,9 +43,14 @@ const Home = () => {
   const [invoicesSt, setInvoicesSt] = useState();
   const [customersSt, setCustomersSt] = useState();
   const [serialSt, setSerialSt] = useState([]);
+  const [showPopupSt, setShowPopupSt] = useState();
+  const [showDetailsPopup, setShowDetailsPopup] = useState(false);
+  const [details, setDetails] = useState(null);
+
+  const { saveAllToFirestore, loading, error } = useSaveToFirestore();
+  // const { cleanResponse } = useCleanResponse();
 
 
-  // / // Create a regex to match the specified section
   function cleanResponse(responseText) {
     try {
       // Remove backticks and the word "json"
@@ -49,152 +68,85 @@ const Home = () => {
       throw new Error("Failed to clean and parse response into JSON.");
     }
   }
-    
 
-  const updateAllData = ({
-    updatedInvoices,
-    updatedProducts,
-    updatedCustomers,
-  }) => {
-    // Ensure updatedProducts reflects in updatedInvoices
-    if (updatedProducts) {
-      updatedInvoices = updatedInvoices?.map((invoice) => ({
-        ...invoice,
-        productDetails: invoice?.productDetails?.map((product) => {
-          const matchingProduct = updatedProducts?.find(
-            (p) => p?.Name === product?.ProductName
-          );
-          return matchingProduct ? { ...product, ...matchingProduct } : product;
-        }),
-      }));
-    }
+  const handleShowPopup = (bool) => {
+    console.log(bool);
+    // setShowPopupSt(bool)
 
-    // Ensure updatedInvoices reflects in updatedProducts
-    if (updatedInvoices) {
-      updatedProducts = updatedProducts?.map((product) => {
-        const isUsedInInvoices =
-          updatedInvoices &&
-          updatedInvoices?.some((invoice) =>
-            invoice?.productDetails?.some((p) => p?.ProductName === product?.Name)
-          );
-        if (isUsedInInvoices) {
-          const matchingDetails = updatedInvoices
-            ?.flatMap((invoice) => invoice.productDetails)
-            ?.find((p) => p?.ProductName === product?.Name);
-          return matchingDetails ? { ...product, ...matchingDetails } : product;
-        }
-        return product;
-      });
-    }
-
-    // Dispatch updates
-    dispatch(
-      setInvoices({
-        invoices: updatedInvoices || invoices,
-        products: updatedProducts || products,
-        customers: updatedCustomers || customers,
-      })
+    let selPopup = invoicesSt?.flatMap((el) =>
+      (el?.ProductDetails ? el.ProductDetails : el.productDetails).filter(
+        (item) => item.productSerialNo === bool
+      )
     );
+    setShowPopupSt(JSON.stringify(selPopup));
+    console.log(JSON.stringify(selPopup) + "sfd");
   };
 
-  // const updateInvoices = (index, updatedInvoice) => {
-  //   const updatedInvoices = [...invoicesSt];
-  //   updatedInvoices[index] = updatedInvoice;
+  async function handleSave() {
+    const docId = await saveAllToFirestore("Invoices", invoicesSt);
+    if (docId) {
+      alert(`Data saved successfully with ID: ${docId}`);
+    } else {
+      alert("Error");
+    }
+  }
 
-  //   const updatedProducts = productsSt?.map((product) => {
-  //     const matchingProduct = updatedInvoice?.productDetails?.find(
-  //       (p) => p?.ProductName === (product?.Name || product?.ProductName)
-  //     );
-  //     return matchingProduct ? { ...product, ...matchingProduct } : product;
-  //   });
+  const handleDetails = async (invDetails) => {
+    console.log("invdetails: ", invDetails.name);
+    setDetails({ name: invDetails.name, description: invDetails.description });
+  };
 
-  //   updateAllData({ updatedInvoices, updatedProducts });
+  function handleShowDetailsPopup(e) {
+    console.log("e:", e);
+    setShowDetailsPopup(e);
+  }
 
-    
-  // };
-
-
-  const updateCustomers = (index, updatedCustomer) => {
-    // Update standalone customer list
-    console.log("Updated Cus: ", updatedCustomer)
-    const updatedCustomers = customers?.length>0 ? [...customers]: [...customersSt];
-    updatedCustomers[index] = updatedCustomer;
- 
-    const updatedInvoices = invoicesSt?.map((invoice) =>
-      invoice.SerialNumber === updatedCustomer.serials
-        ? { ...invoice, ...updatedCustomer } // Update matching customer in the invoice
-        : invoice
-    );
-  
-    // Update local states
-    setCustomersSt(updatedCustomers);
+  const handleUpdateProduct = (updatedProduct) => {
+    const updatedInvoices = invoicesSt.map((invoice) => ({
+      ...invoice,
+      ProductDetails: (invoice?.ProductDetails
+        ? invoice.ProductDetails
+        : invoice.productDetails
+      ).map((product) =>
+        product.productSerialNo === updatedProduct.productSerialNo
+          ? updatedProduct
+          : product
+      ),
+    }));
     setInvoicesSt(updatedInvoices);
-  
-    // Dispatch updated data
-    dispatch(
-      setInvoices({
-        invoices: updatedInvoices,
-        products,
-        customers: updatedCustomers,
-      })
-    );
+    setShowPopupSt(null); // Close popup after update
   };
+
   console.log("Customer reducer:", customers);
 
-
   const updateInvoices = (index, updatedInvoice) => {
-    // Update standalone invoices list
-    console.log("Updated Invoice: ", updatedInvoice);
-    const updatedInvoices = invoices?.length > 0 ? [...invoices] : [...invoicesSt];
-    updatedInvoices[index] = updatedInvoice;
-  
-    updatedInvoices[index] = {
-      ...updatedInvoices[index],
-      ...updatedInvoice,
-      products: updatedInvoices[index].Products, // Preserve nested products
-    };
-
-    const updatedCustomers = customersSt?.map((customer) =>
-      customer.SerialNumber === updatedInvoice.serials
-        ? { ...customer, ...updatedInvoice } // Update matching customer based on SerialNumber
-        : customer
-    );
-  
-    // Update local states
+    console.log(updatedInvoice, "hellp");
+    const updatedInvoices = [...invoicesSt];
+    updatedInvoices[index] = { ...updatedInvoices[index], ...updatedInvoice };
     setInvoicesSt(updatedInvoices);
-    setCustomersSt(updatedCustomers);
-  
-    console.log("Invoice: ",invoicesSt)
-    
-    // Dispatch updated data
-    dispatch(
-      setInvoices({
-        invoices: updatedInvoices,
-        products,
-        customers: updatedCustomers,
-      })
-    );
+
+    dispatch(setInvoices({ invoices: updatedInvoices }));
+    console.log(updatedInvoices);
+    // console.log(setInvoicesSt, "wdfd")
   };
   console.log("Invoices reducer:", invoices);
-  
-  
-  
+
   const handleUpload = (data) => {
     let invoicesEx = cleanResponse(data.data).Invoices;
     const customersEx = cleanResponse(data.data).Customers.map((customer) => ({
       ...customer,
       CustomerID: customer.CustomerID || uuidv4(), // Assign a UUID if not present
     }));
-      let productsEx = cleanResponse(data.data).Products;
+    let productsEx = cleanResponse(data.data).Products;
     // const customers = cleanRespons
     console.log("Extracted Invoices:", invoicesEx);
     console.log("Extracted Invoices:", productsEx);
     console.log("Extracted Invoices:", customersEx);
-    
-        setInvoicesSt(invoicesEx);
-        setCustomersSt(customersEx);
-        // const products = extractSection(data?.data, "Products");
-        setProductsSt(productsEx);
+
+    setInvoicesSt(invoicesEx);
+    setCustomersSt(customersEx);
+    // const products = extractSection(data?.data, "Products");
+    setProductsSt(productsEx);
     dispatch(setInvoices({ invoicesEx, productsEx, customersEx }));
 
     const normalizedInvoices = invoices?.map((invoice) => ({
@@ -219,105 +171,67 @@ const Home = () => {
     );
   };
 
-  const updateProducts = (index, updatedProduct) => {
-    // Update standalone product list
-    const updatedProducts = [...productsSt];
-    updatedProducts[index] = updatedProduct;
-  
-    // Sync updated product with invoices
-    const updatedInvoices = invoicesSt?.map((invoice) => ({
-      ...invoice,
-      productDetails: invoice?.productDetails?.map((product) =>
-        product?.ProductName === updatedProduct?.Name
-          ? { ...product, ...updatedProduct } // Update matching product in the invoice
-          : product
-      ),
-    }));
-  
-    // Update local states
-    setProductsSt(updatedProducts);
-    setInvoicesSt(updatedInvoices);
-  
-    // Dispatch updated data
-    dispatch(
-      setInvoices({
-        invoices: updatedInvoices,
-        products: updatedProducts,
-        customers,
-      })
-    );
-  };
-  
-
-  console.log("InvoiceSt: ",invoicesSt);
-  console.log("Invoicea: ",invoices);
+  console.log("InvoiceSt: ", invoicesSt);
+  console.log("Invoicea: ", invoices);
   // console.log("ProductSt: ",productsSt);
-
 
   useEffect(() => {
     // Process invoices and update serialSt
-    const processedSerials = processedInvoices?.map((invoice) => invoice["SerialNumber"]);
-    console.log("Serials: processed: ",processedSerials)
+    const processedSerials = processedInvoices?.map(
+      (invoice) => invoice["SerialNumber"]
+    );
+    console.log("Serials: processed: ", processedSerials);
     setSerialSt(processedSerials || "na");
-  }, [invoices]); 
-
+  }, [invoices]);
 
   const processedInvoices = invoicesSt?.map((invoice) => {
     // Process products
-    console.log("Invoices: ", invoice)
-    const products =
-    invoice?.productDetails? invoice.productDetails : 
-    invoice?.ProductName? invoice.ProductName: invoice?.ProductDetails? invoice?.Products:invoice?.products?.map((product, index) => ({
-      SerialNumber: invoice["SerialNumber"],
-      // UUID: uuidv4(),
-        ProductName: product["ProductName"] || product["Name"] || product["productName"],
-        Qty: product["Qty"] || product["qty"] || product["Quantity"] || 0,
-        Tax: product["Tax"] !== undefined ? product["Tax"] : product["tax"] || 0,
-        TotalAmount: product["TotalAmount"] || product["totalAmount"] || 0,
-      })) || [];
-  
-      return {
-        // UUID: uuidv4(),
-        SerialNumber: invoice["SerialNumber"],
-        CustomerName: invoice["CustomerName"] || invoice["customerName"],
-        PhoneNumber: invoice["PhoneNumber"],
-        InvoiceDate: invoice["InvoiceDate"] || "Unknown",
-        Subtotal: invoice["Subtotal"] || 0,
-        Tax: invoice["Tax"] || 0,
-        TotalAmount: invoice["TotalAmount"] || 0,
-        BillingAddress: invoice["Address"] || "N/A",
-        Products: products,
-      };
-    });
+    console.log("Invoices: ", invoicesSt);
+    const products = invoice?.productDetails
+      ? invoice.productDetails
+      : invoice.InvoiceItems
+      ? invoice.InvoiceItems
+      : invoice.ProductName
+      ? invoice.ProductName
+      : invoice?.ProductDetails
+      ? invoice.ProductDetails
+      : invoice?.Products
+      ? invoice.peoducts
+      : invoice?.products?.map((product, index) => ({
+          SerialNumber: invoice["SerialNumber"],
+          UUID: uuidv4(),
+          ProductName:
+            product["ProductName"] ||
+            product["Name"] ||
+            product["productName"] ||
+            product["InvoiceItems"],
+          Qty: product["Qty"] || product["qty"] || product["Quantity"] || 0,
+          Tax: (product["Tax"] !== undefined
+            ? product["Tax"]
+            : product["tax"] || 0
+          ).reduce((acc, curr) => acc + curr, 0),
+          TotalAmount: product["TotalAmount"] || product["totalAmount"] || 0,
+          UUID: uuidv4(),
+        })) || [];
 
-    console.log("ProcessediNV: ", processedInvoices)
-
-
-    // console.log(serialSt)
-
-
-  const processedInvoices2 = invoicesSt?.map((invoice, index) => {
-    // Process products
-    const products =
-    invoice?.productDetails? invoice.productDetails : 
-    invoice?.ProductName? invoice.ProductName: invoice?.ProductDetails?.map((product, index) => ({
-      serials: serialSt[index],
-        ProductName: product["ProductName"] || product["Name"] || product["productName"] || "Unknown",
-        Qty: product["Qty"] || product["qty"] || product["Quantity"] || 0,
-        Tax: product["Tax"] !== undefined ? product["Tax"] : product["tax"] || 0,
-        // PriceWithTax: product["PriceWithTax"] || product["PriceWithTax"] || 0,
-
-
-      })) || [];
-  
     return {
-      serials: serialSt[index] || "N/A",
+      SerialNumber: invoice["SerialNumber"],
+      CustomerName: invoice["CustomerName"] || invoice["customerName"],
+      PhoneNumber: invoice["PhoneNumber"],
+      InvoiceDate: invoice["InvoiceDate"] || "Unknown",
+      Subtotal: invoice["Subtotal"] || 0,
+      Tax: Array.isArray(invoice["Tax"])
+        ? invoice["Tax"].reduce((sum, value) => sum + value, 0)
+        : invoice["Tax"] || 0,
+      TotalAmount: Array.isArray(invoice["TotalAmount"])
+        ? invoice["TotalAmount"].reduce((sum, value) => sum + value, 0)
+        : invoice["TotalAmount"] || 0,
+      BillingAddress: invoice["Address"] || "N/A",
       Products: products,
     };
   });
 
-  console.log("Serailst: ",serialSt)
-  
+  console.log("Processed: ", processedInvoices);
 
   const tabs = [
     {
@@ -328,6 +242,7 @@ const Home = () => {
           // onUpdate={(index, updatedRow) =>
           //   handleUpdate("invoices", index, updatedRow)
           // }
+          showPopup={(e) => handleShowPopup(e)}
           onUpdate={(index, updatedRow) => {
             updateInvoices(index, updatedRow);
             // updateCustomers(index, updatedRow);
@@ -337,62 +252,41 @@ const Home = () => {
         />
       ),
     },
-    {
-      label: "Products",
-      content: (
-        <EditableTable
-          data={processedInvoices2}
-          onUpdate={(index, updatedRow) => {
-            updateProducts(index, updatedRow);
-            // handleUpdate("products", index, updatedRow);
-          }}
-          tab="Products"
-
-        />
-      ),
-    },
-    {
-      label: "Customers",
-      content: (
-        <EditableTable
-          data={customersSt?.map((customer, idx) => ({
-            serials: serialSt[idx] || "N/A",
-            // CustomerID: customer.CustomerID,
-            CustomerName: customer["CustomerName"], // Now synchronized
-            PhoneNumber: customer["PhoneNumber"],
-            CustomerName: customer?.CustomerName || customer["CustomerName"],
-            PhoneNumber: customer?.PhoneNumber || customer["PhoneNumber"],
-            TotalPurchaseAmount: customer["TotalPurchaseAmount"],
-            Address: customer?.Address,
-          }))}
-          onUpdate={(index, updatedRow) => {
-            updateCustomers(index, updatedRow);
-            // handleUpdate("customers", index, updatedRow);
-          }}
-          tab="Customers"
-
-        />
-      ),
-    },
   ];
+  console.log(showDetailsPopup);
 
   return (
     <div>
-      <h1>Invoice Manager</h1>
-      <FileUploader onUpload={handleUpload} />
+      {showDetailsPopup && (
+        <DetailsPopup
+          details={handleDetails}
+          showPopup={handleShowDetailsPopup}
+          invoicesSt={invoicesSt}
+        />
+      )}
+      {showPopupSt && (
+        <Popup
+          products={showPopupSt}
+          onUpdate={handleUpdateProduct}
+          onClose={() => setShowPopupSt(null)}
+        />
+      )}
+
+      <FileUploader onUpload={handleUpload} userId={props.userId} />
       <TabLayout
         tabs={tabs}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
       />
-      {invoices && (
+      {invoicesSt && (
         <div className="save-btn-cont">
-        {/* <button
-          onClick={() => saveAllToFirestore({ invoices, products, customers })}
-          className="save-btn"
-       >
-          Save
-        </button> */}
+          {/* <button onClick={handleSave} className="save-btn"/> */}
+          <button
+            onClick={() => handleShowDetailsPopup(true)}
+            className="save-btn"
+          >
+            Save
+          </button>
         </div>
       )}
     </div>

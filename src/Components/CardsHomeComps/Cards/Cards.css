@@ -1,0 +1,137 @@
+.cards {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .ldrs{
+    /* position: fixed; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: gray; */
+    margin-top: 2rem;
+  }
+  
+  .search-box {
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    width: 40%;
+    font-size: 16px;
+    border-radius: 30px;
+    background-color: transparent;
+  }
+  
+  .card-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 30px;
+    padding: 10px;
+  }
+  
+  .date-group{
+    margin-bottom: 2rem;
+    margin-top: 4rem;
+  }
+
+  .card-container::-webkit-scrollbar {
+    height: 10px;
+  }
+  
+  .card-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+  }
+  
+  .card-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+  .card {
+    flex: 0 0 auto;
+    width: 250px;
+    background: #f9f9f9;
+    border: 1px solid #d5d5d5;
+    border-radius: 8px;
+    padding: 15px;
+    /* box-shadow: 0 2px 10px rgba(83, 83, 83, 0.1); */
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card p{
+    margin-top: 0;
+    /* max-height: 8rem; */
+    /* min-height: 5rem; */
+    height: 12vh;
+    /* overflow: hidden; */
+  }
+  
+.arrow-right-cards{
+  justify-self: flex-end;
+  align-self: flex-end;
+}
+
+  .card h3 {
+    margin: 0 0 10px;
+  }
+  
+  .card p {
+    color: #555;
+  }
+  
+
+  
+.search-box:focus{
+  outline: none;
+}
+
+
+  /* ------------------------------------Swiper------------------------- */
+
+
+  .swiper-container{
+    width: 85%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+  .card{
+    /* width: 100%; */
+  }
+  /* Change arrow colors */
+.swiper-button-next,
+.swiper-button-prev {
+  /* color: #ff6347; Example: Tomato color */
+}
+
+/* Add background images for arrows */
+.swiper-button-next {
+  /* background-image: url('./arrow-right\ \(1\).png'); */
+  background-repeat: no-repeat;
+  background-size: contain;
+  /* color: transparent; Hide default arrow */
+}
+
+.swiper-button-prev {
+  /* background-image: url('./arrow-left.png'); */
+  background-repeat: no-repeat;
+  background-size: contain;
+  /* color: transparent; Hide default arrow */
+}
+
+/* Adjust size of buttons */
+.swiper-button-next,
+.swiper-button-prev {
+  width: 50px;
+  height: 50px;
+}
+
+/* Change hover effect */
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  opacity: 0.8; /* Slight transparency on hover */
+}
