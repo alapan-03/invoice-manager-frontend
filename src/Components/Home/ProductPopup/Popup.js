@@ -21,7 +21,8 @@ export default function Popup({ products, onUpdate, onClose }) {
 
   return (
     <div className="popup-products">
-      <Cross className="cross-popup" color="black" onClick={onClose} />
+      {/* <Cross className="cross-popup" color="black" onClick={onClose} /> */}
+      <div className="cross-popup" onClick={onClose}></div>
       <h3>Edit Product</h3>
 
       <table className="popup-table">

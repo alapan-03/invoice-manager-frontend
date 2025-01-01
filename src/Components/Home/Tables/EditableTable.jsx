@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Toast from "./../../Toast";
-import { Check, Pencil, Plus } from "lucide-react";
+import { Check, Pencil, Plus, PlusIcon } from "lucide-react";
 import {
   Box,
   Table,
@@ -12,6 +12,8 @@ import {
   TextField,
 } from "@mui/material";
 import { TableRows } from "@mui/icons-material";
+import toast, { Toaster } from "react-hot-toast";
+import "./Table2.css"
 
 const EditableTable = ({ data, onUpdate, tab, showPopup }) => {
   const [editingRow, setEditingRow] = useState(null);
@@ -51,14 +53,15 @@ const EditableTable = ({ data, onUpdate, tab, showPopup }) => {
       console.log(missingFields);
 
       if (missingFields) {
-        setToastMessage("Warning: Some fields are missing in the data!");
+        // setToastMessage("Warning: Some fields are missing in the data!");
+        toast.error("Warning: Some fields are missing in the data!")
       }
     }
   }, [data]);
 
-  const closeToast = () => {
-    setToastMessage(""); // Clear the toast message
-  };
+  // const closeToast = () => {
+  //   setToastMessage(""); // Clear the toast message
+  // };
 
   // console.log(nestedEdit)
 
@@ -96,10 +99,14 @@ const EditableTable = ({ data, onUpdate, tab, showPopup }) => {
 
   return (
     <Box sx={{ overflowX: "auto"}} className="table-container">
-    {toastMessage && <Toast message={toastMessage} onClose={closeToast} />}
+    {/* {toastMessage && <Toast message={toastMessage} onClose={closeToast} />} */}
+
+    <div>
+        <Toaster />
+      </div>
 
     <TableContainer sx={{ minWidth: 1200, borderRadius:"5px"}} style={{borderRadius:"5px"}}>
-      <Table className="editable-table" sx={{borderRadius:"10px", boxShadow:"2px 2px 2px black" }} style={{borderRadius:"10px"}}>
+      <Table className="editable-table" sx={{borderRadius:"10px"}} style={{borderRadius:"10px"}}>
         <TableHead className="table-head">
           <TableRow>
             {data && 
@@ -146,9 +153,12 @@ const EditableTable = ({ data, onUpdate, tab, showPopup }) => {
           ) : (
             <TableRow>
               <TableCell className="nothing-cont">
+                <div className="nothing-cont">
+                <div><PlusIcon/></div>
                 <div className="nothing1">Nothing to show!</div>
                 <div className="nothing2">
                   Please drag and drop or click on the area to upload a file
+                </div>
                 </div>
               </TableCell>
             </TableRow>

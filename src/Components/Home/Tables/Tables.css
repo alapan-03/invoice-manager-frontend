@@ -60,6 +60,9 @@
 
 .nothing-cont{
   color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 
@@ -74,7 +77,7 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #f5f5f5;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    /* box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05); */
     padding: 2rem 0;
     /* display: flex;
     justify-content: center;

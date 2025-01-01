@@ -7,6 +7,7 @@ import Toast from "./../../Toast";
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router";
 import { AuthProvider, useAuth } from './../../../AuthProvider';
+import toast, { Toaster } from "react-hot-toast";
 
 
 lineWobble.register();
@@ -43,11 +44,14 @@ const FileUploader = ({ onUpload, userId }) => {
 
     if(!user){
 
-      showToast(setToastMessage, "SignIn first!");
 
-      let timeout = setTimeout(() => {
+
+      // showToast(setToastMessage, "SignIn first!");
+      toast.error("SignIn first")
+
+      // let timeout = setTimeout(() => {
         navigate("/signin")
-      }, 1500);
+      // }, 1500);
 
       // clearTimeout(timeout)
       return;
@@ -57,8 +61,8 @@ const FileUploader = ({ onUpload, userId }) => {
     formData?.append("file", acceptedFiles[0]);
 
     // Call API
-    // fetch("https://invoice-manager-backend-mzys.onrender.com/upload", {
-    fetch("http://localhost:3000/upload", {
+    fetch("https://invoice-manager-backend-mzys.onrender.com/upload", {
+    // fetch("http://localhost:3000/upload", {
       method: "POST",
       body: formData,
     })
@@ -89,7 +93,11 @@ const FileUploader = ({ onUpload, userId }) => {
 
   return (
     <>
-      {toastMessage && <Toast message={toastMessage} />}
+      {/* {toastMessage && <Toast message={toastMessage} />} */}
+
+      <div>
+        <Toaster />
+      </div>
 
       <div className="file-uploader-container">
         {loading ? (

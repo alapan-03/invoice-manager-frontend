@@ -132,8 +132,7 @@
 
 // export default Cards;
 
-import { lineWobble } from 'ldrs'
-
+import { lineWobble } from "ldrs";
 
 import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -147,39 +146,38 @@ import "./Cards.css";
 import useGetFromFirestore from "../../../app/Hooks/useGetFromFirestore";
 import { AuthProvider, useAuth } from "./../../../AuthProvider";
 import { CircleChevronRight } from "lucide-react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const Cards = () => {
   const { user } = useAuth();
   const { invoices } = useGetFromFirestore(user?.email);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const [slidesPerView, setSlidesPerView] = useState(getSlidesPerView());
-  
-lineWobble.register()
+  const[ isdataEmpty, setDataEmpty] = useState(false);
 
-// Default values shown
+  lineWobble.register();
 
-function getSlidesPerView() {
-  const width = window.innerWidth;
-  if(width >= 1900) return 5;
-  if (width >= 1400) return 4;
-  if (width >= 1024) return 3;
-  if (width >= 700) return 2;
-  // if (width >= 768) return 2;
-  return 1;
-}
+  // Default values shown
 
+  function getSlidesPerView() {
+    const width = window.innerWidth;
+    if (width >= 1900) return 5;
+    if (width >= 1400) return 4;
+    if (width >= 1024) return 3;
+    if (width >= 700) return 2;
+    // if (width >= 768) return 2;
+    return 1;
+  }
 
-useEffect(() => {
-  const handleResize = () => {
-    setSlidesPerView(getSlidesPerView());
-  };
+  useEffect(() => {
+    const handleResize = () => {
+      setSlidesPerView(getSlidesPerView());
+    };
 
-  window.addEventListener("resize", handleResize);
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
-
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const trimDescription = (description) => {
     const words = description?.split(" ");
@@ -188,11 +186,14 @@ useEffect(() => {
       : description;
   };
 
-
   useEffect(() => {
-    if (invoices.length===0) {
+    if (invoices.length === 0) {
       setIsLoading(true); // Still loading
+      setTimeout(() => {
+        setDataEmpty(true)
+      }, 10000);
     } else {
+      setDataEmpty(false)
       setIsLoading(false); // Data fetched
     }
   }, [invoices]);
@@ -221,7 +222,7 @@ useEffect(() => {
     )
   );
 
-  console.log(groupedInvoices)
+  console.log(groupedInvoices);
 
   const sortedDates = Object.keys(groupedInvoices).sort((a, b) => b - a);
 
@@ -271,18 +272,18 @@ useEffect(() => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="search-box"
       />
-          {isLoading && 
-          <div className='ldrs'>
+      {isLoading && !isdataEmpty && (
+        <div className="ldrs">
           <l-line-wobble
-      size="80"
-      stroke="5"
-      bg-opacity="0.1"
-      speed="1.75" 
-      color="black" 
-    ></l-line-wobble>
-    </div>
-    }
-      {sortedDates ?
+            size="80"
+            stroke="5"
+            bg-opacity="0.1"
+            speed="1.75"
+            color="black"
+          ></l-line-wobble>
+        </div>
+      )}
+      {sortedDates && 
         sortedDates.map((date) => {
           let prevColor = null;
           return (
@@ -294,8 +295,8 @@ useEffect(() => {
                 // freeMode={true}
                 // mousewheel={true}
                 spaceBetween={50}
-                slidesPerView={slidesPerView}  
-                // slidesPerView={4}  
+                slidesPerView={slidesPerView}
+                // slidesPerView={4}
                 // centeredSlides={true}
 
                 className="swiper-container"
@@ -304,35 +305,35 @@ useEffect(() => {
                   const cardColor = getUniqueColor(prevColor);
                   prevColor = cardColor;
                   return (
-                    <SwiperSlide key={card.id} 
-                    // style={slidesPerView === 1 ? { width: "100%" } : {}}
+                    <SwiperSlide
+                      key={card.id}
+                      // style={slidesPerView === 1 ? { width: "100%" } : {}}
                     >
                       <Link to={`/details/${card?.id}`}>
-                      <div
-                        className="card"
-                        style={{ backgroundColor: cardColor }}
-                      >
-                        <h3>{card?.name}</h3>
-                        <p>{trimDescription(card?.description)}</p>
-                        <CircleChevronRight
-                          size={30}
-                          className="arrow-right-cards"
-                        />
-                      </div>
-                    </Link>
+                        <div
+                          className="card"
+                          style={{ backgroundColor: cardColor }}
+                        >
+                          <h3>{card?.name}</h3>
+                          <p>{trimDescription(card?.description)}</p>
+                          <CircleChevronRight
+                            size={30}
+                            className="arrow-right-cards"
+                          />
+                        </div>
+                      </Link>
                     </SwiperSlide>
                   );
                 })}
               </Swiper>
             </div>
           );
-        }) 
-        :(
-          <div style={{fontSize:"100px"}}>
-            <p>Nothing to show</p>
-          </div>
-        )
-        }
+        })}
+       {isdataEmpty && (
+        <div style={{ fontSize: "100px" }} className="nothingCards">
+          <p>Nothing to show</p>
+        </div>
+      )}
     </div>
   );
 };

@@ -28,6 +28,7 @@ import { AvatarGenerator } from "random-avatar-generator";
 import "./Navbar.css";
 
 import { AuthProvider, useAuth } from "./../../AuthProvider";
+import toast, { Toaster } from "react-hot-toast";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -46,9 +47,11 @@ function Navbar() {
     signOut(auth)
       .then(() => {
         // Sign-out successful.
+        toast.success("Successfully Signed Out")
       })
       .catch((error) => {
         // An error happened.
+        toast.success("Error while signing out")
       });
   }
 
@@ -68,10 +71,14 @@ function Navbar() {
   };
 
   return (
+    
     <AppBar
       position="static"
       sx={{ backgroundColor: "transparent", boxShadow: "none", color: "black" }}
     >
+      <div>
+        <Toaster />
+      </div>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -121,15 +128,16 @@ function Navbar() {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {/* {pages.map((page) => ( */}
-              <Link to="/home"><MenuItem onClick={handleCloseNavMenu}>
-                <Typography sx={{ textAlign: "center" }}>Home</Typography>
-              </MenuItem>
+              <Link to="/home">
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Typography sx={{ textAlign: "center" }}>Home</Typography>
+                </MenuItem>
               </Link>
 
               <Link to="/">
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography sx={{ textAlign: "center" }}>Upload</Typography>
-              </MenuItem>
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Typography sx={{ textAlign: "center" }}>Upload</Typography>
+                </MenuItem>
               </Link>
               {/* ))} */}
             </Menu>
@@ -164,22 +172,22 @@ function Navbar() {
               </Button>
             ))} */}
 
-<Link to="/">
-            <Button
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: "white", display: "block", color: "black" }}
-            >
-              Home
-            </Button>
+            <Link to="/">
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: "white", display: "block", color: "black" }}
+              >
+                Home
+              </Button>
             </Link>
 
-<Link to="/home">
-            <Button
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: "white", display: "block", color: "black" }}
-            >
-              Upload
-            </Button>
+            <Link to="/home">
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: "white", display: "block", color: "black" }}
+              >
+                Upload
+              </Button>
             </Link>
           </Box>
 
