@@ -20,6 +20,7 @@
     font-size: 16px;
     border-radius: 30px;
     background-color: transparent;
+    min-width: 14rem;
   }
   
   .card-container {
@@ -100,7 +101,7 @@
 
 
   .card{
-    /* width: 100%; */
+    width: 100%;
   }
 
   .nothingCards{

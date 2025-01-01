@@ -139,6 +139,20 @@ function Navbar() {
                   <Typography sx={{ textAlign: "center" }}>Upload</Typography>
                 </MenuItem>
               </Link>
+
+              <Link to="/signin">
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Typography sx={{ textAlign: "center" }}>Sign In</Typography>
+                </MenuItem>
+              </Link>
+
+              <Link to="/signup">
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Typography sx={{ textAlign: "center" }}>Sign Up</Typography>
+                </MenuItem>
+              </Link>
+
+              
               {/* ))} */}
             </Menu>
           </Box>
@@ -189,6 +203,7 @@ function Navbar() {
                 Upload
               </Button>
             </Link>
+
           </Box>
 
           {user ? (

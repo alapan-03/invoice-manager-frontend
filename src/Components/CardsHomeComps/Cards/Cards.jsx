@@ -165,7 +165,7 @@ const Cards = () => {
     if (width >= 1900) return 5;
     if (width >= 1400) return 4;
     if (width >= 1024) return 3;
-    if (width >= 700) return 2;
+    if (width >= 550) return 2;
     // if (width >= 768) return 2;
     return 1;
   }
