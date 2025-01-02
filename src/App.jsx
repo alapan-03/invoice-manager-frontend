@@ -26,7 +26,7 @@ function App() {
         <Routes>
           <Route path="/" element={<CardsHome userId={id} />} />
           <Route path="/details/:sno" element={<CardDetails/>} />
-          <Route path="/home" element={<Home userId={id} />} />
+          <Route path="/upload" element={<Home userId={id} />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/signin" element={<SigninPage uId={getId} />} />
         </Routes>

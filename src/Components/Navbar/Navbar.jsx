@@ -128,13 +128,13 @@ function Navbar() {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {/* {pages.map((page) => ( */}
-              <Link to="/home">
+              <Link to="/">
                 <MenuItem onClick={handleCloseNavMenu}>
                   <Typography sx={{ textAlign: "center" }}>Home</Typography>
                 </MenuItem>
               </Link>
 
-              <Link to="/">
+              <Link to="/upload">
                 <MenuItem onClick={handleCloseNavMenu}>
                   <Typography sx={{ textAlign: "center" }}>Upload</Typography>
                 </MenuItem>
