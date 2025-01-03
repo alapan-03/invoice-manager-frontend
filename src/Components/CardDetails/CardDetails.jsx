@@ -233,7 +233,7 @@ export default function CardDetails() {
         className="card-details-product"
         onClick={() => handleProductClick(product)}
       >
-        <span>{product.ProductName || product.productName || "Unknown Product"}</span>
+        <span>{product.ProductName || product.productName || product.name || product.Name || "Unknown Product"}</span>
       </div>
     )
   )
@@ -242,7 +242,7 @@ export default function CardDetails() {
     isEditMode ? (
       <TextField
         key={i}
-        value={product.ProductName || product.productName || ""}
+        value={product.ProductName || product.productName || product.name || product.Name ||""}
         onChange={(e) => {
           const updatedProducts = [...invoice.productDetails];
           updatedProducts[i].ProductName = e.target.value;
