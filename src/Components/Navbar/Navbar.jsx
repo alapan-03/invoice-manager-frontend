@@ -34,7 +34,7 @@ const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Navbar() {
-  // const navigate = useNavigate("/");
+  const navigate = useNavigate("/");
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -48,6 +48,7 @@ function Navbar() {
       .then(() => {
         // Sign-out successful.
         toast.success("Successfully Signed Out")
+        navigate("/")
       })
       .catch((error) => {
         // An error happened.
@@ -195,7 +196,7 @@ function Navbar() {
               </Button>
             </Link>
 
-            <Link to="/home">
+            <Link to="/upload">
               <Button
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block", color: "black" }}

@@ -67,6 +67,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column
-  ;
+  flex-direction: column;
+  width: 90vw;
+  margin-top: 8vh;
+  text-align: center;
 }

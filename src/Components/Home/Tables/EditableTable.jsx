@@ -52,10 +52,10 @@ const EditableTable = ({ data, onUpdate, tab, showPopup }) => {
       );
       console.log(missingFields);
 
-      if (missingFields) {
-        // setToastMessage("Warning: Some fields are missing in the data!");
-        toast.error("Warning: Some fields are missing in the data!")
-      }
+      // if (missingFields) {
+      //   // setToastMessage("Warning: Some fields are missing in the data!");
+      //   toast.error("Warning: Some fields are missing in the data!")
+      // }
     }
   }, [data]);
 
@@ -98,6 +98,8 @@ const EditableTable = ({ data, onUpdate, tab, showPopup }) => {
   console.log("Data", data);
 
   return (
+    <>
+      {data?.length > 0 ? (
     <Box sx={{ overflowX: "auto"}} className="table-container">
     {/* {toastMessage && <Toast message={toastMessage} onClose={closeToast} />} */}
 
@@ -117,8 +119,7 @@ const EditableTable = ({ data, onUpdate, tab, showPopup }) => {
           </TableRow>
         </TableHead>
         <TableBody style={{borderRadius:"100px"}}>
-          {data?.length > 0 ? (
-            data.map((row, index) => (
+            {data.map((row, index) => (
               <TableRow key={index}>
                 {Object.keys(row)
                   .filter((key) => !(editingRow !== null && key === "Products")) // Exclude "products" column when editing
@@ -149,24 +150,26 @@ const EditableTable = ({ data, onUpdate, tab, showPopup }) => {
                   )}
                 </TableCell>
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell className="nothing-cont">
-                <div className="nothing-cont">
-                <div><PlusIcon/></div>
-                <div className="nothing1">Nothing to show!</div>
-                <div className="nothing2">
-                  Please drag and drop or click on the area to upload a file
-                </div>
-                </div>
-              </TableCell>
-            </TableRow>
-          )}
+            ))}
         </TableBody>
-      </Table>
-    </TableContainer>
-  </Box>
+        </Table>
+        </TableContainer>
+        </Box>
+      ) 
+      : (
+        <TableRow>
+          <TableCell className="nothing-cont">
+            <div className="nothing-cont">
+            <div><PlusIcon/></div>
+            <div className="nothing1">Nothing to show!</div>
+            <div className="nothing2">
+              Please drag and drop or click on the area to upload a file
+            </div>
+            </div>
+          </TableCell>
+        </TableRow>
+      )}
+      </>
   );
 };
 

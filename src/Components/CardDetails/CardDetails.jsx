@@ -215,31 +215,54 @@ export default function CardDetails() {
                   )}
                 </TableCell>
                 <TableCell>
-                  {invoice.ProductDetails && invoice.ProductDetails.length > 0 ? (
-                    invoice.ProductDetails.map((product, i) =>
-                      isEditMode ? (
-                        <TextField
-                          key={i}
-                          value={product.ProductName || product.productName || ""}
-                          onChange={(e) => {
-                            const updatedProducts = [...invoice.ProductDetails];
-                            updatedProducts[i].ProductName = e.target.value;
-                            handleInputChange(
-                              index,
-                              "ProductDetails",
-                              updatedProducts
-                            );
-                          }}
-                        />
-                      ) : (
-                      <div className="card-details-product" onClick={() => handleProductClick(product)}>
-                        <span key={i}>{product.ProductName || product.productName || "Unknown Product"}</span>
-                        </div>
-                      )
-                    )
-                  ) : (
-                    "No Products"
-                  )}
+                {invoice.ProductDetails && invoice.ProductDetails.length > 0 ? (
+  invoice.ProductDetails.map((product, i) =>
+    isEditMode ? (
+      <TextField
+        key={i}
+        value={product.ProductName || product.productName || ""}
+        onChange={(e) => {
+          const updatedProducts = [...invoice.ProductDetails];
+          updatedProducts[i].ProductName = e.target.value;
+          handleInputChange(index, "ProductDetails", updatedProducts);
+        }}
+      />
+    ) : (
+      <div
+        key={i}
+        className="card-details-product"
+        onClick={() => handleProductClick(product)}
+      >
+        <span>{product.ProductName || product.productName || "Unknown Product"}</span>
+      </div>
+    )
+  )
+) : invoice.productDetails && invoice.productDetails.length > 0 ? (
+  invoice.productDetails.map((product, i) =>
+    isEditMode ? (
+      <TextField
+        key={i}
+        value={product.ProductName || product.productName || ""}
+        onChange={(e) => {
+          const updatedProducts = [...invoice.productDetails];
+          updatedProducts[i].ProductName = e.target.value;
+          handleInputChange(index, "ProductDetails", updatedProducts);
+        }}
+      />
+    ) : (
+      <div
+        key={i}
+        className="card-details-product"
+        onClick={() => handleProductClick(product)}
+      >
+        <span>{product.ProductName || product.productName || "Unknown Product"}</span>
+      </div>
+    )
+  )
+) : (
+  "No Products"
+)}
+
                 </TableCell>
               </TableRow>
             ))}
