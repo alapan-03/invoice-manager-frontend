@@ -61,8 +61,8 @@ const FileUploader = ({ onUpload, userId }) => {
     formData?.append("file", acceptedFiles[0]);
 
     // Call API
-    // fetch("https://invoice-manager-backend-mzys.onrender.com/upload", {
-    fetch("http://localhost:3000/upload", {
+    fetch("https://invoice-manager-backend-mzys.onrender.com/upload", {
+    // fetch("http://localhost:3000/upload", {
       method: "POST",
       body: formData,
     })

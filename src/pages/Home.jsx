@@ -23,6 +23,8 @@ import Navbar from "../Components/Navbar/Navbar.jsx";
 import useSaveToFirestore from "../app/Hooks/useSaveToFirestore.jsx";
 import useCleanResponse from "../app/Hooks/useCleanResponse.jsx";
 import DetailsPopup from "../Components/Home/Tables/DetailsPopup/DetailsPopup.jsx";
+import { saveAs } from "file-saver";
+import Papa from "papaparse";
 
 const Home = (props) => {
   const { user } = useAuth();
@@ -50,6 +52,69 @@ const Home = (props) => {
   const { saveAllToFirestore, loading, error } = useSaveToFirestore();
   // const { cleanResponse } = useCleanResponse();
 
+  const flattenProducts = (products) => {
+    if (!products || !Array.isArray(products)) return "";
+    return products
+      .map(
+        (product) =>
+          `Name: ${
+            product["ProductName"] ||
+            product["Name"] ||
+            product["productName"] ||
+            product["InvoiceItems"]
+          }, Qty: ${
+            product["Qty"] || product["qty"] || product["Quantity"] || 0
+          }, Total: ${
+            Array.isArray(product["TotalAmount"])
+              ? product["TotalAmount"].reduce((sum, value) => sum + value, 0)
+              : product["TotalAmount"] || 0
+          },
+          
+          `
+      )
+      .join(" | "); // Use `|` or another delimiter to separate multiple products
+  };
+
+  // const prepareDataForCSV = (data) => {
+  //   return data.map((item) => ({
+  //     ...item,
+  //     Products: flattenProducts(item.Products), // Flatten or stringify the Products array
+  //   }));
+  // };
+
+
+  const prepareDataForCSV = (data) => {
+    const flattenedData = [];
+    data.forEach((invoice) => {
+      const products = invoice.Products || [];
+      products.forEach((product) => {
+        flattenedData.push({
+          InvoiceID: invoice.SerialNumber || invoice.InvoiceID,
+          CustomerName: invoice.CustomerName,
+          PhoneNumber: invoice.PhoneNumber,
+          InvoiceDate: invoice.InvoiceDate,
+          ProductName: product["ProductName"] ||
+          product["Name"] ||
+          product["productName"] ||
+          product["InvoiceItems"] || "Unknown",
+          Qty: product["Qty"] || product["qty"] || product["Quantity"] || 0,
+          TotalAmount: product["TotalAmount"]
+          ? product["TotalAmount"].reduce((sum, value) => sum + value, 0)
+          : product["TotalAmount"] || 0,
+        });
+      });
+    });
+    return flattenedData;
+  };
+  
+
+  // Add this function to export CSV
+  const exportAsCSV = (data, filename = "data.csv") => {
+    const preparedData = prepareDataForCSV(data);
+    const csv = Papa.unparse(preparedData);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    saveAs(blob, filename);
+  };
 
   function cleanResponse(responseText) {
     try {
@@ -58,10 +123,10 @@ const Home = (props) => {
         .replace(/`/g, "") // Remove all backticks
         .replace(/json/gi, "") // Remove occurrences of "json" (case-insensitive)
         .trim(); // Remove leading/trailing whitespace
-  
+
       // Parse the cleaned response into JSON
       const parsedData = JSON.parse(cleanedResponse);
-  
+
       return parsedData; // Return the JSON object
     } catch (error) {
       console.error("Error parsing cleaned response:", error.message);
@@ -280,12 +345,18 @@ const Home = (props) => {
       />
       {invoicesSt && (
         <div className="save-btn-cont">
-          {/* <button onClick={handleSave} className="save-btn"/> */}
-          <button
+          {/* <button
             onClick={() => handleShowDetailsPopup(true)}
             className="save-btn"
           >
             Save
+          </button> */}
+
+          <button
+            onClick={() => exportAsCSV(processedInvoices, "invoices.csv")}
+            className="save-btn"
+          >
+            Export as CSV
           </button>
         </div>
       )}

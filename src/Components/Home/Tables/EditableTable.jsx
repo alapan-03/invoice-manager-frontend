@@ -156,19 +156,22 @@ const EditableTable = ({ data, onUpdate, tab, showPopup }) => {
         </TableContainer>
         </Box>
       ) 
-      : (
-        <TableRow>
-          <TableCell className="nothing-cont">
-            <div className="nothing-cont">
-            <div><PlusIcon/></div>
-            <div className="nothing1">Nothing to show!</div>
-            <div className="nothing2">
-              Please drag and drop or click on the area to upload a file
-            </div>
-            </div>
-          </TableCell>
-        </TableRow>
-      )}
+      : 
+      // (
+      //   <TableRow>
+      //     <TableCell className="nothing-cont">
+      //       <div className="nothing-cont">
+      //       <div><PlusIcon/></div>
+      //       <div className="nothing1">Nothing to show!</div>
+      //       <div className="nothing2">
+      //         Please drag and drop or click on the area to upload a file
+      //       </div>
+      //       </div>
+      //     </TableCell>
+      //   </TableRow>
+      // )
+      <></>
+      }
       </>
   );
 };
