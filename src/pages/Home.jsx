@@ -93,6 +93,10 @@ const Home = (props) => {
           CustomerName: invoice.CustomerName,
           PhoneNumber: invoice.PhoneNumber,
           InvoiceDate: invoice.InvoiceDate,
+          Tax: product["Tax"] !== undefined
+            ? product["Tax"]
+            : product["tax"] || 0,
+            Subtotal: invoice["Subtotal"] || 0,
           ProductName: product["ProductName"] ||
           product["Name"] ||
           product["productName"] ||
