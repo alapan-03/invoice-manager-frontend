@@ -42,20 +42,11 @@ const FileUploader = ({ onUpload, userId }) => {
       return;
     }
 
-    if(!user){
-
-
-
-      // showToast(setToastMessage, "SignIn first!");
-      toast.error("SignIn first")
-
-      // let timeout = setTimeout(() => {
-        navigate("/signin")
-      // }, 1500);
-
-      // clearTimeout(timeout)
-      return;
-    }
+    // if(!user){
+    //   toast.error("SignIn first")
+    //     navigate("/signin")
+    //   return;
+    // }
 
     setLoading(true);
     formData?.append("file", acceptedFiles[0]);
